@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int[][] matrix;
 //        StandardMatrixFiller standardMatrixFiller = new StandardMatrixFiller();
 //        matrix = standardMatrixFiller.fillMatrix("GGTTGACTA", "TGTTACGG");
@@ -14,7 +14,7 @@ public class Main {
 //        matrix = standardMatrixFiller.fillMatrix("GACTTAC", "CGTGAATTCAT");
 
         ParallelMatrixFiller parallelMatrixFiller = new ParallelMatrixFiller();
-        matrix = parallelMatrixFiller.fillMatrix("1", "12");
+        matrix = parallelMatrixFiller.fillMatrix("GGTTGACTA", "TGTTACGG");
 
 
         Main.printMatrix(matrix);
