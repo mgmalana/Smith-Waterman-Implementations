@@ -1,11 +1,19 @@
+import MatrixFiller.MatrixFiller;
 import MatrixFiller.ParallelMatrixFiller;
 import MatrixFiller.StandardMatrixFiller;
+import MatrixFiller.Traceback;
 
 import java.util.Arrays;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException
+    {
+        Traceback traceback;
+
+        String stringA = "DSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFF";
+        String stringB = "DSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFF";
+
         long start;
         long end;
 
@@ -15,6 +23,9 @@ public class Main {
                 "DSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFFDSADASDFFFFFSDSADSADASDADSADSADSDFFF");
         end = System.nanoTime();
         System.out.println("Standard Matrix Filler Time: " + (end - start));
+
+        traceback = new Traceback(matrix1, standardMatrixFiller.getHighX(),standardMatrixFiller.getHighY());
+        traceback.generateAlignments(stringA, stringB);
 
         start = System.nanoTime();
         ParallelMatrixFiller parallelMatrixFiller = new ParallelMatrixFiller();
