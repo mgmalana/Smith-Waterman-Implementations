@@ -9,8 +9,7 @@ public class ParallelMatrixFiller extends MatrixFiller {
     private int iFinal = 1;
     private int jFinal = 1;
 
-    private int NUM_THREADS = 16;
-
+    private final static int NUM_THREADS = 10;
 
     public ParallelMatrixFiller() {
         super();
@@ -284,10 +283,10 @@ public class ParallelMatrixFiller extends MatrixFiller {
 //        System.out.println("time: " + this.totalTime);
 //        return matrix;
 //    }
-    
+
     //v4.1 diagonal threading but with groups
     public int[][] fillMatrix (String stringA, String stringB) throws InterruptedException, ExecutionException {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
         int stringALen = stringA.length();
         int stringBLen = stringB.length();
@@ -297,6 +296,10 @@ public class ParallelMatrixFiller extends MatrixFiller {
         int[][] matrix = new int[stringALen + 1][stringBLen + 1]; // plus 1 because of the init 0
         int diagRowGroup = 0;
         int diagColGroup = 1;
+
+        int rowMod = stringALen % NUM_THREADS;  // used for edge cells
+        int colMod = stringBLen % NUM_THREADS; // used for edge cells
+        int numRowCellsToFill = matrix[0].length - colMod; // used for edge cells
 
         while (diagRowGroup < NUM_THREADS) { // loop in going down per row
             int iGroup = diagRowGroup;
@@ -359,9 +362,23 @@ public class ParallelMatrixFiller extends MatrixFiller {
             diagColGroup++;
         }
 
-        executorService.shutdown();
+        // for edges
+        if (colMod != 0) {
+            for (int i = 1; i < matrix.length; i++) {
+                for (int j = matrix[0].length - colMod; j < matrix[0].length; j++) {
+                    fillCell(matrix, i, j, stringA, stringB);
+                }
+            }
+        }
+        if (rowMod != 0) {
+            for (int i = matrix.length - rowMod; i < matrix.length; i++) {
+                for (int j = 1; j < numRowCellsToFill; j++) {
+                    fillCell(matrix, i, j, stringA, stringB);
+                }
+            }
+        }
 
-        //dont forget to add yung mga di nalagayy sa threads
+        executorService.shutdown();
         return matrix;
     }
 
