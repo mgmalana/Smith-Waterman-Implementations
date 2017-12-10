@@ -2,7 +2,7 @@ package Laurenz.standard;
 
 import static Utility.Print.println;
 
-public class MagicalTraceback
+public class StandardTraceback
 {
     private String stringA;
     private String stringB;
@@ -13,7 +13,7 @@ public class MagicalTraceback
     private int highY;
     private int highVal;
 
-    public MagicalTraceback(int[][] matrix, int highX, int highY)
+    public StandardTraceback(int[][] matrix, int highX, int highY)
     {
         this.matrix = matrix;
         this.highX = highX;
@@ -23,7 +23,7 @@ public class MagicalTraceback
         println("highest val: " + this.highVal + " from " + highX + "/" + highY);
     }
 
-    public MagicalTraceback(String stringA, String stringB, int[][] matrix, int highX, int highY) {
+    public StandardTraceback(String stringA, String stringB, int[][] matrix, int highX, int highY) {
         this.stringA = stringA;
         this.stringB = stringB;
         this.matrix = matrix;
@@ -33,7 +33,7 @@ public class MagicalTraceback
         this.highVal = matrix[highX][highY];
     }
 
-    public MagicalTraceback(int[][] matrix, int highX, int highY, int highVal)
+    public StandardTraceback(int[][] matrix, int highX, int highY, int highVal)
     {
         this.matrix = matrix;
         this.highX = highX;

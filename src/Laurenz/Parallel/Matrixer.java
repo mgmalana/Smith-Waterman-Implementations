@@ -4,57 +4,81 @@ import static Utility.Print.*;
 
 public class Matrixer
 {
+    String stringA;
+    String stringB;
+    MatrixStorage ms;
 
-    int[][] resultMatrix;
+    public Matrixer(String stringA, String stringB) {
+        this.stringA = stringA;
+        this.stringB = stringB;
+    }
 
-    public int[][] buildInitialMatrix(String stringA, String stringB)
+    public Matrixer(MatrixStorage ms) {
+        this.ms = ms;
+    }
+
+    public void manualLoop(MatrixStorage ms)
     {
-        int[][] resultingMatrix;
-        /* Create the initial size of the matrix (note plus one due to 0 col row) */
-        resultingMatrix = new int[ stringA.length() + 1 ][ stringB.length() + 1 ];
-//        Cell cell = new Cell(1,1,resultingMatrix, stringA, stringB);
-//        cell.computeCellScore();
-        /* set starting for now as 1,1 */
-        return resultingMatrix;
+
     }
 
-    public void runMe(String stringA, String stringB)
+    public void runMatrixer2B()
     {
-        int[][] matrix;
-        matrix = buildInitialMatrix(stringA, stringB);
-//        printMatrix(matrix);
-        println("");
-//            Cell cell = new Cell(1,1, matrix, stringA, stringB);
-//            cell.placeRandIntoCell();
-//            printMatrix(matrix);
-        Traverser t1 = new Traverser("right", matrix, 1,1,stringA,stringB,'r');
-        Traverser t2 = new Traverser("down", matrix, 1,2, stringA, stringB, 'd');
-        t2.start();
-        t1.start();
+        long startTime = System.currentTimeMillis();
+        MatrixStorage ms = new MatrixStorage(stringA, stringB);
+        Cell c1, c2;
+        int i = 1, j = 1;
 
-//        resultMatrix = t2.getOriginalMatrix();
+        while( i <= ms.getStringALen() )
+        {
+//            println(ms.getFinishedThreads());
+
+//            println("FS: " + ms.getFinishedThreads());
+            c1 = new Cell("1", ms, i, ms.getStringALen(), 'r');
+            c2 = new Cell("2", ms, i, ms.getStringBLen(), 'd');
+            i++;
+
+            c1.start();
+            c2.start();
+//            println("FT NOW: " + ms.getFinishedThreads());
+        }
+        while( ms.getFinishedThreads() < ( (ms.getStringALen()-1) + (ms.getStringBLen()-1) ) )
+        {
+            print("ft: " + ms.getFinishedThreads());
+//            int sbs = ms.getFinishedThreads()+1;
+        }
+        println("finishedThreads: " + ms.getFinishedThreads());
+        println("m2b finished");
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Time: " + totalTime);
+        printMatrix(ms.getMatrix());
     }
 
-    public int[][] getResultMatrix() {
-        return resultMatrix;
+    public void runMatrixer2()
+    {
+//        MatrixStorage matrixStorage = new MatrixStorage(stringA, stringB);
+//        this.ms = matrixStorage;
+        Cell c1 = new Cell(ms, 1,0, ms.getStringALen(),ms.getStringBLen());
+        Cell c2 = new Cell(ms, 0, 1, ms.getStringALen(), ms.getStringBLen());
+        c2.start(); /* upright triangle*/
+        c1.start(); /* downward triangle*/
+//        printMatrix( matrixStorage.getMatrix() );
     }
 
-    private static class testMe
+    public MatrixStorage getMs() {
+        return ms;
+    }
+
+    public static class test1
     {
         public static void main(String[] args)
         {
-            Matrixer matrixer = new Matrixer();
             String stringA = "GGTTGACTA";
             String stringB = "TGTTACGG";
-            int[][] matrix;
-            matrix = matrixer.buildInitialMatrix(stringA, stringB);
-            printMatrix(matrix);
-            println("");
-            Traverser t1 = new Traverser("right", matrix, 1,1,stringA,stringB,'r');
-            Traverser t2 = new Traverser("down", matrix, 1,2, stringA, stringB, 'd');
-            t1.start();
-            t2.start();
+            Matrixer matrixer = new Matrixer(stringA, stringB);
 
+            matrixer.runMatrixer2B();
         }
     }
 }

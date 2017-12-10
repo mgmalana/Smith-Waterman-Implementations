@@ -38,7 +38,7 @@ public class StandardMatrixFiller {
                 if(stringA.charAt(i - 1) == stringB.charAt(j - 1))
                 { // if match
                     matrix[i][j] = matrix[i-1][j-1] + this.matchScore;
-//                    updateHighScore(matrix[i-1][j-1] + this.matchScore, i, j);
+                    updateHighScore(matrix[i-1][j-1] + this.matchScore, i, j);
                 }
                 else
                 { // if mismatch
@@ -58,7 +58,7 @@ public class StandardMatrixFiller {
                     }
 
                     matrix[i][j] = maxScore;
-//                    updateHighScore(maxScore, i, j);
+                    updateHighScore(maxScore, i, j);
                 }
 
             }
