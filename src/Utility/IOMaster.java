@@ -31,7 +31,7 @@ public class IOMaster
 
         try
         {
-            br = new BufferedReader( new FileReader( fileName ) );
+            br = new BufferedReader( new FileReader( "src/Utility/ReadFiles/" + fileName ) );
 
             while( lineNumber < maxLines )
             {
@@ -48,49 +48,9 @@ public class IOMaster
         return sequence;
     }
 
-    public int[] readFileToNumList() throws Exception
-    {
-        int[] numList = new int[10000000];
-        int content;
-        BufferedReader br;
-        int lineNumber = 0;
-        try
-        {
-            br = new BufferedReader( new FileReader( fileName ) );
-            while ( lineNumber < 10000000)
-            {
-
-                numList[lineNumber] = Integer.parseInt(br.readLine());
-                lineNumber++;
-
-            }
-            println("\n Done reading from file.");
-        }
-        catch ( FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-
-        return numList;
-    }
-
-    public void writeNumListToFile(int[] numlist) throws Exception
-    {
-        String completeFileName = fileAddress + "/" + fileName;
-        PrintWriter writer = new PrintWriter(this.fileName, "UTF-8");
-//		// Write the result to file
-//		writer.println(toPrint);
-        for(int n: numlist)
-        {
-            writer.println(n);
-        }
-        // Close the printer
-        writer.close();
-    }
-
     public void writeStringToFile(int[][] matrix) throws Exception
     {
-        PrintWriter writer = new PrintWriter(this.fileName, "UTF-8");
+        PrintWriter writer = new PrintWriter("src/Utility/ReadFiles/" + this.fileName, "UTF-8");
         String finals = Arrays.deepToString(matrix).replace("], ", "]\n").replace("[[", "[").replace("]]", "]");
         writer.println(finals);
         writer.close();
