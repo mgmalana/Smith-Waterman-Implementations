@@ -9,7 +9,7 @@ public class ParallelMatrixFiller extends MatrixFiller {
     private int iFinal = 1;
     private int jFinal = 1;
 
-    private final static int NUM_THREADS = 10;
+    private final static int NUM_THREADS = 12;
 
     public ParallelMatrixFiller() {
         super();
@@ -299,7 +299,10 @@ public class ParallelMatrixFiller extends MatrixFiller {
 
         int rowMod = stringALen % NUM_THREADS;  // used for edge cells
         int colMod = stringBLen % NUM_THREADS; // used for edge cells
+
         int numRowCellsToFill = matrix[0].length - colMod; // used for edge cells
+        int colOffset = 0;
+        int rowOffset = 0;
 
         while (diagRowGroup < NUM_THREADS) { // loop in going down per row
             int iGroup = diagRowGroup;
@@ -307,16 +310,24 @@ public class ParallelMatrixFiller extends MatrixFiller {
 
             // loop in traversing groups diagonally
             for (int jGroup = 0; jGroup <= diagRowGroup; jGroup++) {
+                if (jGroup == NUM_THREADS - 1 && colMod != 0){ // If at the last jgroup
+                    colOffset = colMod;
+                }
+                if (jGroup == 0 && rowMod != 0 && diagRowGroup == NUM_THREADS - 1){
+                    rowOffset = rowMod;
+                }
 
                 final int iGroupFinal = iGroup;
                 final int jGroupFinal = jGroup;
                 final int diagRowGroupFinal = diagRowGroup;
+                final int numCellsRowGroupFinal = numCellsPerRowGroup + rowOffset;
+                final int numCellsColGroupFinal = numCellsPerColGroup + colOffset;
 
                 futures.add(executorService.submit( new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 1; i <= numCellsPerRowGroup; i++){ // relative (to the group) i
-                            for(int j = 1; j <= numCellsPerColGroup; j++){ // relative (to the group) j
+                        for(int i = 1; i <= numCellsRowGroupFinal; i++){ // relative (to the group) i
+                            for(int j = 1; j <= numCellsColGroupFinal; j++){ // relative (to the group) j
 //                                matrix[iGroupFinal * numCellsPerRowGroup + i][jGroupFinal * numCellsPerColGroup + j] = diagRowGroupFinal;
                                 fillCell(matrix, iGroupFinal * numCellsPerRowGroup + i, jGroupFinal * numCellsPerColGroup + j, stringA, stringB);
                             }
@@ -338,12 +349,15 @@ public class ParallelMatrixFiller extends MatrixFiller {
                 final int iGroupFinal = iGroup;
                 final int jGroupFinal = jGroup;
                 final int diagColGroupFinal = diagColGroup;
+                final int numCellsRowGroupFinal = numCellsPerRowGroup + rowOffset;
+                final int numCellsColGroupFinal = numCellsPerColGroup + colOffset;
+
 
                 futures.add(executorService.submit( new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 1; i <= numCellsPerRowGroup; i++){ // relative (to the group) i
-                            for(int j = 1; j <= numCellsPerColGroup; j++){ // relative (to the group) j
+                        for(int i = 1; i <= numCellsRowGroupFinal; i++){ // relative (to the group) i
+                            for(int j = 1; j <= numCellsColGroupFinal; j++){ // relative (to the group) j
 //                                matrix[(iGroupFinal - 1) * numCellsPerRowGroup + i][jGroupFinal * numCellsPerColGroup + j] = diagColGroupFinal;
                                 fillCell(matrix, (iGroupFinal - 1) * numCellsPerRowGroup + i, jGroupFinal * numCellsPerColGroup + j, stringA, stringB);
                             }
@@ -362,21 +376,21 @@ public class ParallelMatrixFiller extends MatrixFiller {
             diagColGroup++;
         }
 
-        // for edges
-        if (colMod != 0) {
-            for (int i = 1; i < matrix.length; i++) {
-                for (int j = matrix[0].length - colMod; j < matrix[0].length; j++) {
-                    fillCell(matrix, i, j, stringA, stringB);
-                }
-            }
-        }
-        if (rowMod != 0) {
-            for (int i = matrix.length - rowMod; i < matrix.length; i++) {
-                for (int j = 1; j < numRowCellsToFill; j++) {
-                    fillCell(matrix, i, j, stringA, stringB);
-                }
-            }
-        }
+//        // for edges
+//        if (colMod != 0) {
+//            for (int i = 1; i < matrix.length; i++) {
+//                for (int j = matrix[0].length - colMod; j < matrix[0].length; j++) {
+//                    fillCell(matrix, i, j, stringA, stringB);
+//                }
+//            }
+//        }
+//        if (rowMod != 0) {
+//            for (int i = matrix.length - rowMod; i < matrix.length; i++) {
+//                for (int j = 1; j < numRowCellsToFill; j++) {
+//                    fillCell(matrix, i, j, stringA, stringB);
+//                }
+//            }
+//        }
 
         executorService.shutdown();
         return matrix;
