@@ -1,41 +1,77 @@
 package MatrixFiller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class ParallelMatrixFiller extends MatrixFiller {
     private int kFinal;
+    private int iFinal = 1;
     public ParallelMatrixFiller() {
         super();
     }
 
     public ParallelMatrixFiller(int matchScore, int mismatchScore, int gapPenalty) {
-        super(matchScore,mismatchScore,gapPenalty);
+        super(matchScore, mismatchScore, gapPenalty);
     }
-
-    public int[][] fillMatrix (String stringA, String stringB) {
+// v1.0: With forking
+    public int[][] fillMatrix (String stringA, String stringB) throws InterruptedException, ExecutionException {
         int[][] matrix = new int[stringA.length() + 1][stringB.length() + 1]; // plus 1 because of the init 0
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(16);
+        int forkAtIndex = stringB.length() < 200 ? stringB.length() : stringB.length() / 3; // either 1 or 1/3 of stringB len
+        Vector<Future> futures = new Vector<>();
 
-        for (int i = 1; i < matrix.length; i++) {  // starts with 1 because row 1 is all 0
-            int iFinal = i;
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    for (int j = 1; j < matrix[iFinal].length; j++) { // starts with 1 because column 1 is all 0
-                        fillCell(matrix, iFinal, j, stringA, stringB);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                int i = iFinal;
+                for (int j = 1; j < matrix[i].length; j++) { // starts with 1 because column 1 is all 0
+                    fillCell(matrix, i, j, stringA, stringB);
+                    if(j == forkAtIndex) {
+                        iFinal++;
+                        if(iFinal < matrix.length){
+                            try {
+                                futures.add(executorService.submit(this));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
-            };
-            executorService.submit(runnable);
+            }
+        };
+
+        futures.add(executorService.submit(runnable)); // wait to finish all threads
+
+        for (int k = 0; k < futures.size(); k++) {
+            futures.get(k).get();
         }
 
+        executorService.shutdown();
         return matrix;
     }
 
 //    public int[][] fillMatrix (String stringA, String stringB) throws InterruptedException {
-//        ExecutorService executor = Executors.newFixedThreadPool(2);
+//        int[][] matrix = new int[stringA.length() + 1][stringB.length() + 1]; // plus 1 because of the init 0
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
+//
+//        for (int i = 1; i < matrix.length; i++) {  // starts with 1 because row 1 is all 0
+//            int iFinal = i;
+//            Runnable runnable = new Runnable() {
+//                @Override
+//                public void run() {
+//                    for (int j = 1; j < matrix[iFinal].length; j++) { // starts with 1 because column 1 is all 0
+//                        fillCell(matrix, iFinal, j, stringA, stringB);
+//                    }
+//                }
+//            };
+//            executorService.submit(runnable);
+//        }
+//
+//        return matrix;
+//    }
+
+//    public int[][] fillMatrix (String stringA, String stringB) throws InterruptedException {
 //        int[][] matrix = new int[stringA.length() + 1][stringB.length() + 1]; // plus 1 because of the init 0
 //        int stringALen = stringA.length();
 //        int stringBLen = stringB.length();
@@ -82,7 +118,6 @@ public class ParallelMatrixFiller extends MatrixFiller {
 //        int len = stringALen < stringBLen ? stringALen : stringBLen;
 //
 //        List<Callable<Void>> callables = new ArrayList<>();
-//        List<Future<Void>> future;
 //        callables.add(new Callable<Void>() {
 //            @Override
 //            public Void call() throws Exception {
@@ -102,22 +137,10 @@ public class ParallelMatrixFiller extends MatrixFiller {
 //                return null;
 //            }
 //        });
-//        long start;
-//        long end;
-//        long time = 0;
-//
 //        for(int k = 1; k <= len; k++){
 //            this.kFinal = k;
-//            start = System.nanoTime();
-//            future = executorService.invokeAll(callables);
-//            end = System.nanoTime();
-//            time += end-start;
-//            for (Future f:future) { // for blocking
-//                f.get();
-//            }
+//            executorService.invokeAll(callables);
 //        }
-//
-//        System.out.println("Threads Time: " + time);
 //
 //        executorService.shutdown();
 //        return matrix;
@@ -125,7 +148,7 @@ public class ParallelMatrixFiller extends MatrixFiller {
 
 //    // this is the diagonal threading. not worth it magparallel huhu
 //    public int[][] fillMatrix (String stringA, String stringB) throws InterruptedException {
-//        ExecutorService executorService = Executors.newFixedThreadPool(20);
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
 //
 //        int stringALen = stringA.length();
 //        int stringBLen = stringB.length();

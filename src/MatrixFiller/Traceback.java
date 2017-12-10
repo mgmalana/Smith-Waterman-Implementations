@@ -20,7 +20,7 @@ public class Traceback
         this.highY = highY;
         this.highVal = matrix[highX][highY];
         // get value for highVal
-        println("highest val: " + this.highVal + " from " + highX + "/" + highY);
+        // println("highest val: " + this.highVal + " from " + highX + "/" + highY);
     }
 
     public Traceback(String stringA, String stringB, int[][] matrix, int highX, int highY) {
@@ -112,9 +112,9 @@ public class Traceback
 
         }
 
-        println("LCS: " + alignments);
-        println("localA: " + localA);
-        println("localB: " + localB);
+        // println("LCS: " + alignments);
+        // println("localA: " + localA);
+        // println("localB: " + localB);
         return alignments;
     }
 
