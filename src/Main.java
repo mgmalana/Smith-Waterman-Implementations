@@ -1,4 +1,3 @@
-import MatrixFiller.MatrixFiller;
 import MatrixFiller.ParallelMatrixFiller;
 import MatrixFiller.StandardMatrixFiller;
 import MatrixFiller.Traceback;
@@ -34,9 +33,9 @@ public class Main {
         System.out.println("Parallel Matrix Filler Time: " + (end - start));
 
 //        System.out.println("matrix1: ");
-//        Main.printMatrix(matrix1);
+//        Imp2.printMatrix(matrix1);
 //        System.out.println("matrix2: ");
-//        Main.printMatrix(matrix2);
+//        Imp2.printMatrix(matrix2);
 
         System.out.println("Is Matrix equal: " + Main.isMatrixSame(matrix1,matrix2));
 
