@@ -4,7 +4,7 @@ public abstract class MatrixFiller {
     protected int matchScore;
     protected int mismatchScore;
     protected int gapPenalty;
-    /* traceback */
+    // traceback
     private int highestValue = 0;
     private int highX = 0;
     private int highY = 0;
@@ -48,7 +48,7 @@ public abstract class MatrixFiller {
 
     public void updateHighScore(int currScore, int i, int j)
     {
-        /* for treysbak */
+        // Traceback
         if( highestValue < currScore)
         {
             this.highestValue = currScore;
