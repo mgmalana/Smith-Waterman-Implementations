@@ -71,7 +71,7 @@ public class Traceback
             if(values[currHigh] == 0) {
                 break;
             }
-            
+
             // goes up
             if( currHigh == 0 )
             {
@@ -119,10 +119,6 @@ public class Traceback
             maxVal = values [2];
             maxIndex = 2;
         }
-
-        System.out.println("maxVal: " + maxVal);
-        System.out.println("maxIndex: " + maxIndex);
-
         return maxIndex;
     }
 }
