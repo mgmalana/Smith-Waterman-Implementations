@@ -1,5 +1,7 @@
 package MatrixFiller;
 
+import java.util.Arrays;
+
 import static Utility.Print.println;
 
 public class Traceback
@@ -112,9 +114,9 @@ public class Traceback
 
         }
 
-        // println("LCS: " + alignments);
-        // println("localA: " + localA);
-        // println("localB: " + localB);
+         println("LCS: " + alignments);
+         println("localA: " + localA);
+         println("localB: " + localB);
         return alignments;
     }
 
@@ -131,7 +133,6 @@ public class Traceback
                 maxIndex = i;
             }
         }
-
         return maxIndex;
     }
 }

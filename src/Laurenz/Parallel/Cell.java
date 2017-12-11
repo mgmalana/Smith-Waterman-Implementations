@@ -101,7 +101,7 @@ public class Cell extends Thread
     /* second version boi */
     public void run2()
     {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         int tempVal;
         try
         {
@@ -197,7 +197,7 @@ public class Cell extends Thread
     }
     public void run()
     {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         int tempVal;
         try {
             if (startY == 0)
@@ -231,14 +231,15 @@ public class Cell extends Thread
 
         if( ms.getFinishedThreads() == 2 )
         {
-            long endTime   = System.currentTimeMillis();
+            long endTime   = System.nanoTime();
             long totalTime = endTime - startTime;
-            System.out.println("ParallelRun: Time: " + totalTime);
-            println("Finished all " + ms.getFinishedThreads() + " thread(s) ");
+            System.out.println("Parallel2 Matrix Filler Time: " + totalTime);
+//            println("Finished all " + ms.getFinishedThreads() + " thread(s) ");
 //            printMatrix( ms.getMatrix() );
 
 //            int[][] testMe = runSingle(ms.getStringA(), ms.getStringB());
-//            isMatrixSame(testMe, ms.getMatrix());
+//            System.out.println("Is Matrix equal: " + isMatrixSame(testMe, ms.getMatrix()));
+
 //            try
 //            {
 //                printToFile("parallel2.txt", ms.getMatrix());
@@ -269,20 +270,20 @@ public class Cell extends Thread
          * Single version
          * */
         /* Populate matrix */
-        long startTime = System.currentTimeMillis(); /* time thingy */
+        long startTime = System.nanoTime(); /* time thingy */
         int[][] matrix = standardMatrixFiller.fillMatrix(stringA, stringB);
 
         /* timer thingy */
-        long endTime   = System.currentTimeMillis();
+        long endTime   = System.nanoTime();
         long totalTime = endTime - startTime;
-        System.out.println("SingleRun: Time: " + totalTime);
+//        System.out.println("SingleRun: Time: " + totalTime);
 //        matrix1 = matrix;
 //        printMatrix(matrix);
-        try {
-            printToFile("single.txt", matrix);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            printToFile("single.txt", matrix);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         return matrix;
     }

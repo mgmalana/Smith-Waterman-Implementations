@@ -55,8 +55,7 @@ public class Matrixer
         printMatrix(ms.getMatrix());
     }
 
-    public void runMatrixer2()
-    {
+    public void runMatrixer2() throws InterruptedException {
 //        MatrixStorage matrixStorage = new MatrixStorage(stringA, stringB);
 //        this.ms = matrixStorage;
         Cell c1 = new Cell(ms, 1,0, ms.getStringALen(),ms.getStringBLen());
@@ -64,6 +63,8 @@ public class Matrixer
         c2.start(); /* upright triangle*/
         c1.start(); /* downward triangle*/
 //        printMatrix( matrixStorage.getMatrix() );
+        c2.join();
+        c1.join();
     }
 
     public MatrixStorage getMs() {
