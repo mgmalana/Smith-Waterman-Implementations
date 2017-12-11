@@ -1,16 +1,16 @@
 package MatrixFiller;
 
 public abstract class MatrixFiller {
-    protected int matchScore;
-    protected int mismatchScore;
-    protected int gapPenalty;
+    public static int matchScore;
+    public static int mismatchScore;
+    public static int gapPenalty;
     // traceback
     private int highestValue = 0;
     private int highX = 0;
     private int highY = 0;
 
     public MatrixFiller() {
-        this.matchScore = 3;
+        this.matchScore = 2;
         this.mismatchScore = -3;
         this.gapPenalty = -2;
     }

@@ -49,7 +49,7 @@ public class Imp2 {
     {
         MatrixStorage ms = new MatrixStorage(stringA, stringB);
         Matrixer m2 = new Matrixer(ms);
-        m2.runMatrixer2();
+        //m2.runMatrixer2();
 //        try
 //        {
 //            printToFile("parallel2.txt", m2.getMs().getMatrix());
